@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main  # Déclenche l'action sur un push vers la branche 'main', ajustez selon vos besoins
+    tags:
+      - 'v*'  # Déclenche l'action pour les tags, par exemple "v1.0", "v1.1" etc.
 
 jobs:
   build:
@@ -21,8 +23,17 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/meteo-app:latest .
+          # Récupérer le tag actuel, soit 'latest' soit le tag Git
+          TAG=${GITHUB_REF#refs/tags/}
+          if [ "$TAG" == "main" ]; then
+            TAG="latest"
+          fi
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/meteo-app:$TAG .
 
       - name: Push Docker image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/meteo-app:latest
+          TAG=${GITHUB_REF#refs/tags/}
+          if [ "$TAG" == "main" ]; then
+            TAG="latest"
+          fi
+          docker push ${{ secrets.DOCKER_USERNAME }}/meteo-app:$TAG
