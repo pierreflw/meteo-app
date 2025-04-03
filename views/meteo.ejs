@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Météo</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>🌤 Météo du jour</h1>
+  <form method="get" action="/">
+    <input type="text" name="ville" placeholder="Entrez une ville" />
+    <button type="submit">Voir la météo</button>
+  </form>
+
+  <% if (meteo) { %>
+    <h2><%= meteo.ville %></h2>
+    <p>Température : <%= meteo.temp %> °C</p>
+    <p>Description : <%= meteo.description %></p>
+    <img src="https://openweathermap.org/img/wn/<%= meteo.icone %>@2x.png" alt="icone météo">
+  <% } else if (erreur) { %>
+    <p style="color:red;"><%= erreur %></p>
+  <% } %>
+</body>
+</html>
